@@ -53,5 +53,6 @@ jobs:
       with:
         app-name: 'folderaccess-check'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
+#        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile }}
         package: .
