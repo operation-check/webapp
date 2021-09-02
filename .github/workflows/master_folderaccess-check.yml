@@ -39,5 +39,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+       publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
+       package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
