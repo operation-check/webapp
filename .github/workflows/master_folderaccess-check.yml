@@ -1,18 +1,24 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-#
-name: Build and deploy ASP.Net Core app to Azure Web App - folderaccess-check
-
+#masterへのpushで起動
 on:
   push:
     branches:
       - master
   workflow_dispatch:
 
+#ssh利用時はAzureから該当するパラメータを取得しsetする
+env:
+  AZURE_WEBAPP_NAME: 'folderaccess-check'   # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: .              # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '3.1.301'                 # set this to the node version to use
+
+  AZURE_WEBAPP_PATH: 'AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 '
+
+#実行部分
 jobs:
-  build:
-#    runs-on: windows-latest
+  build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
     - uses: actions/checkout@v2
@@ -20,41 +26,15 @@ jobs:
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.301'
+        dotnet-version: ${{ env.DOTNET_VERSION }}
         include-prerelease: true
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
 
-    - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
-      with:
-        name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
-
-  deploy:
-#    runs-on: windows-latest
-    runs-on: ubuntu-latest
-
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-#    - name: Download artifact from build job
-#      uses: actions/download-artifact@v2
-#      with:
-#        name: .net-app
-
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
+    - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'folderaccess-check'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
-        package: .
+      with: 
+       app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
