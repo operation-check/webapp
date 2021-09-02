@@ -1,23 +1,16 @@
-#masterへのpushで起動
 on:
   push:
     branches:
       - master
-  workflow_dispatch:
 
-#ssh利用時はAzureから該当するパラメータを取得しsetする
 env:
-  AZURE_WEBAPP_NAME: 'folderaccess-check'   # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: .              # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '3.1.301'                 # set this to the node version to use
+  AZURE_WEBAPP_NAME: 'folderaccess-check'  # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: .             # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '3.1.301'                # set this to the node version to use
 
-  AZURE_WEBAPP_PATH: 'AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30'
-
-#実行部分
 jobs:
-  build:
-#  build-and-deploy:
-#    name: Build and Deploy
+  build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
     environment: production
 
@@ -26,34 +19,9 @@ jobs:
 
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-        include-prerelease: true
-
-#    - name: Build with dotnet
-#      run: dotnet build --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
-      with:
-        name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
-
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'production'
-#      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-      
-    steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v2
-      with:
-        name: .net-app
+      run: dotnet publish # -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
