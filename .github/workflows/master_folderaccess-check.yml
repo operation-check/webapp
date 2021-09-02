@@ -11,7 +11,7 @@ env:
   AZURE_WEBAPP_PACKAGE_PATH: .              # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1.301'                 # set this to the node version to use
 
-  AZURE_WEBAPP_PATH: 'AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 '
+  AZURE_WEBAPP_PATH: 'AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30'
 
 #実行部分
 jobs:
@@ -36,5 +36,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
