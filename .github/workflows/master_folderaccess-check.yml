@@ -15,8 +15,9 @@ env:
 
 #実行部分
 jobs:
-  build-and-deploy:
-    name: Build and Deploy
+  build:
+#  build-and-deploy:
+#    name: Build and Deploy
     runs-on: ubuntu-latest
     environment: production
 
@@ -34,6 +35,13 @@ jobs:
 
 #    - name: dotnet publish
 #      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+deploy:
+    runs-on: windows-latest
+#    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
