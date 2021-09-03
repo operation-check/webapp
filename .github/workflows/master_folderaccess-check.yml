@@ -10,7 +10,7 @@ env:
   DOTNET_VERSION: '3.1.301'                # set this to the node version to use
 
 jobs:	
-  build and deploy:	
+  build-and-deploy:	
     runs-on: windows-latest	
 
     steps:	
