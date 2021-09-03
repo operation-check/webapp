@@ -8,6 +8,8 @@ env:
   AZURE_WEBAPP_NAME: 'folderaccess-check'  # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: .             # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1.301'                # set this to the node version to use
+# DOTNET_ROOT: '/home/runner/.dotnet'      # /home/runner/.dotnet はこのwork flow外部でset。
+# 
 
 jobs:	
   build-and-deploy:	
@@ -19,7 +21,7 @@ jobs:
     - name: Set up .NET Core	
       uses: actions/setup-dotnet@v1	
       with:	
-        dotnet-version: '3.1.301'	
+        dotnet-version: ${{ env.DOTNET_VERSION }}
         include-prerelease: true	
 
     - name: Build with dotnet	
@@ -51,7 +53,7 @@ jobs:
       id: deploy-to-webapp	
       uses: azure/webapps-deploy@v2	
       with:	
-        app-name: 'folderaccess-check'	
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}	
         slot-name: 'production'	
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}	
-        package: .	
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
