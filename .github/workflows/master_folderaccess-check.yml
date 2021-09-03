@@ -1,73 +1,52 @@
-# workflowの起動条件：
-# master branch をpushしたとき
-# workflow を更新したとき
-on:
-  push:
-    branches:
-     - master
-#       workflow_dispatch:
-
- 
-env:
-  AZURE_WEBAPP_NAME: 'folderaccess-check'  # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: .             # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '3.1.301'                # set this to the node version to use
-
-# 動作部分
-jobs:
-  build-and-deploy:
-# 何処でbuildをdeploy作業を行うかの設定。
-# windows-latestもあるが、Action利用時間が半分になるので注意。
-# Macもあるが、Action利用時間が1/10になるので注意。
-    runs-on: ubuntu-latest
-
-# チェックアウト
-# 細かく設定もできるが、デフォルトならruns-onで設定した物のGitHubデフォルトフォルダへとcheckoutする。
-    steps:
-    - uses: actions/checkout@v2
-
-# runs-onへの環境構築 本件では.NET Core（VSで安易に準備できたから）を利用。
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-       dotnet-version: ${{ env.DOTNET_VERSION }}
-       include-prerelease: true
-
-# dotnet build及びdotnet publishは共にmsbuild に関わる。
-# 本件空のままであればdotnet buildはなくても大丈夫だが、影響範囲を特定できなかった。
-# また同deployをしているほかユーザーの.ymlを閲覧しても残っていることからコメントアウトしていない。
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
-
-    - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-# artifact（成果物をまとめているだけ）だが、これをやらないと「正しく」deployされない。
-# 通常ジョブを跨いでデータのやり取りをする時に使われる。
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
-      with: 
-        name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
-
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v2
-      with:
-        name: .net-app
-
-######
-    - name: 'Deploy to Azure WebApp'
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
-
-    - name: echo env.DOTNET_ROOT
-      run: echo ${{ env.DOTNET_ROOT }}
-    - name: echo env.AZURE_WEBAPP_NAME
-      run: echo ${{ env.AZURE_WEBAPP_NAME }}
-    - name: echo env.AZURE_WEBAPP_PACKAGE_PATH
-      run: echo ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+on:	
+  push:	
+    branches:	
+      - master	
+  workflow_dispatch:	
+	
+jobs:	
+  build:	
+    runs-on: windows-latest	
+	
+    steps:	
+    - uses: actions/checkout@v2	
+	
+    - name: Set up .NET Core	
+      uses: actions/setup-dotnet@v1	
+      with:	
+        dotnet-version: '3.1.301'	
+        include-prerelease: true	
+	
+    - name: Build with dotnet	
+      run: dotnet build --configuration Release	
+	
+    - name: dotnet publish	
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp	
+	
+    - name: Upload artifact for deployment job	
+      uses: actions/upload-artifact@v2	
+      with:	
+        name: .net-app	
+        path: ${{env.DOTNET_ROOT}}/myapp	
+	
+  #deploy:	
+  #  runs-on: windows-latest	
+  #  needs: build	
+  #  environment:	
+  #    name: 'production'	
+  #    url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}	
+	
+  #  steps:	
+    - name: Download artifact from build job	
+      uses: actions/download-artifact@v2	
+      with:	
+        name: .net-app	
+	
+    - name: Deploy to Azure Web App	
+      id: deploy-to-webapp	
+      uses: azure/webapps-deploy@v2	
+      with:	
+        app-name: 'folderaccess-check'	
+        slot-name: 'production'	
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}	
+        package: .	
