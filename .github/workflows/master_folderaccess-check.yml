@@ -25,36 +25,42 @@ jobs:
        dotnet-version: '3.1.301'
        include-prerelease: true
 
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
-      with:
-       name: .net-app
-       path: ${{env.DOTNET_ROOT}}/myapp
+#    - name: Upload artifact for deployment job
+#      uses: actions/upload-artifact@v2
+#      with:
+#       name: .net-app
+#       path: ${{env.DOTNET_ROOT}}/myapp
 
-    - name: echo env.DOTNET_ROOT
-      run: echo ${{ env.DOTNET_ROOT }} 
-
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v2
-      with:
-       name: .net-app
-       path: ${{env.DOTNET_ROOT}}/myapp
+#    - name: Download artifact from build job
+#      uses: actions/download-artifact@v2
+#      with:
+#       name: .net-app
+#       path: ${{env.DOTNET_ROOT}}/myapp
 
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
       with: 
        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+       slot-name: 'production'
        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
-       package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-  
+#       package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+       package: ${{env.DOTNET_ROOT}}/myapp
+
+
+    - name: echo env.DOTNET_ROOT
+      run: echo ${{ env.DOTNET_ROOT }} 
+
     - name: echo env.AZURE_WEBAPP_NAME
       run: echo ${{ env.AZURE_WEBAPP_NAME }} 
   
-    - name: echo secrets.AzureAppService_PublishProfile
-      run: echo ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }} 
+#    - name: echo secrets.AzureAppService_PublishProfile
+#      run: echo ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }} 
         
     - name: echo env.AZURE_WEBAPP_PACKAGE_PATH
       run: echo ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}   
