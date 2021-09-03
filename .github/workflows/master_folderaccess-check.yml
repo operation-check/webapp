@@ -2,18 +2,23 @@ on:
   push:	
     branches:	
       - master	
+# work flowを手動起動したい場合には以下に設定をする。
 #  workflow_dispatch:	
 
 env:
   AZURE_WEBAPP_NAME: 'folderaccess-check'  # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: .             # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1.301'                # set this to the node version to use
-# DOTNET_ROOT: '/home/runner/.dotnet'      # /home/runner/.dotnet はこのwork flow外部でset。
-# 
+# DOTNET_ROOT: '/home/runner/.dotnet'      # /home/runner/.dotnet はこのwork flow外でset。
 
+# 環境設定
 jobs:	
+# buildとdeployを分ける場合はコメントアウトを戻す。
+#  build:
+# checkout     : https://github.com/actions/checkout
+# setup-dotnet : https://github.com/actions/setup-dotnet
   build-and-deploy:	
-    runs-on: windows-latest	
+    runs-on: ubuntu-latest	
 
     steps:	
     - uses: actions/checkout@v2	
@@ -24,31 +29,55 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         include-prerelease: true	
 
+# ビルド
+# dotnet buildとdotnet publishは共にMSbuildに関わるものだが、
+# 微妙にビルド対象が異なる模様。
+# dotnet build   : https://docs.microsoft.com/ja-jp/dotnet/core/tools/dotnet
+# dotnet publish : https://docs.microsoft.com/ja-jp/dotnet/core/tools/dotnet-publish
     - name: Build with dotnet	
-      run: dotnet build --configuration Release	
+      run: |
+        dotnet build --configuration Release	 
+        dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp	
 
-    - name: dotnet publish	
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp	
-
+# 生産物登録（アーティファクト）
+# 生成物をジョブ間で共有できるよう特定の場所にupload-downloadが主目的だが、
+# .NET Coreはこれを通さないと deployはできるが正常に動作しない 状態となる。
+# DOTNET_ROOTはこのworkflow外設定で /home/runner/.dotnet となっている。
+# .net-app はログ確認用
+# upload-artifact   : https://github.com/actions/upload-artifact
+# download-artifact : https://github.com/actions/download-artifact
     - name: Upload artifact for deployment job	
       uses: actions/upload-artifact@v2	
       with:	
         name: .net-app	
         path: ${{env.DOTNET_ROOT}}/myapp	
 
-  #deploy:	
-  #  runs-on: windows-latest	
+#---------------------------------------------------------------------------------
+# buildとdeployを分ける場合はコメントアウトを戻す。
+# needsはdeployを動作させる条件（buildしていないとdeployは動かさない など）を記載。
+# urlは確認先のurl
+# buildとは別ジョブとなるため、改めて環境の宣言を行う必要がある。
+#その場合 artifact のupload-download は必要。
+#deploy:	
+  #  runs-on: ubuntu-latest	
   #  needs: build	
   #  environment:	
   #    name: 'production'	
   #    url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}	
+#---------------------------------------------------------------------------------
 
+# buildとdeployを分ける場合はコメントアウトを戻す。
   #  steps:	
     - name: Download artifact from build job	
       uses: actions/download-artifact@v2	
       with:	
         name: .net-app	
 
+# 配信（デプロイ）
+# 生成物を目的へdeployするためのもの。
+# deploy先の情報をsetする事となる。
+# webapp-deploy : https://github.com/Azure/webapps-deploy
+# SSHを使用したdeployを行う場合は以下 ssh-deploy を使用する。
     - name: Deploy to Azure Web App	
       id: deploy-to-webapp	
       uses: azure/webapps-deploy@v2	
@@ -57,3 +86,22 @@ jobs:
         slot-name: 'production'	
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}	
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+# SSH deploy
+# https://github.com/marketplace/actions/ssh-deploy
+#env:へ以下を追加
+#  SERVER_SSH_KEY: '' # SSH秘密キー（公開キーはAzure側に設定、キーはPEM形式で生成する必要あり）
+#  REMOTE_HOST: ''    # ドメイン名
+#  REMOTE_USER: ''    # ユーザー名
+#  REMOTE_TARGET: ''  # ターゲットディレクトリ
+#
+#    - name: Deploy to Server
+#      uses: easingthemes/ssh-deploy@main
+#      env:
+#          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+#          ARGS: "-rltgoDzvO --delete"
+#          SOURCE: "dist/"
+#          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+#          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+#          TARGET: ${{ secrets.REMOTE_TARGET }}
+#          EXCLUDE: "/dist/, /node_modules/"
