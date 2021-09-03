@@ -49,3 +49,14 @@ jobs:
        app-name: ${{ env.AZURE_WEBAPP_NAME }}
        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  
+    - name: echo env.AZURE_WEBAPP_NAME
+      run: echo ${{ env.AZURE_WEBAPP_NAME }} 
+  
+    - name: echo secrets.AzureAppService_PublishProfile
+      run: echo ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }} 
+        
+    - name: echo env.AZURE_WEBAPP_PACKAGE_PATH
+      run: echo ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}   
+       
+       
