@@ -34,6 +34,9 @@ jobs:
        name: .net-app
        path: ${{env.DOTNET_ROOT}}/myapp
 
+    - name: echo env.DOTNET_ROOT
+      run: echo ${{ env.DOTNET_ROOT }} 
+
     - name: Download artifact from build job
       uses: actions/download-artifact@v2
       with:
