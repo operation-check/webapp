@@ -35,9 +35,9 @@ jobs:
 # dotnet build   : https://docs.microsoft.com/ja-jp/dotnet/core/tools/dotnet
 # dotnet publish : https://docs.microsoft.com/ja-jp/dotnet/core/tools/dotnet-publish
     - name: Build with dotnet	
-      run: |
-        dotnet build --configuration Release	 
-        dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp	
+      run: dotnet build --configuration Release	
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp	
 
 # 生産物登録（アーティファクト）
 # 生成物をジョブ間で共有できるよう特定の場所にupload-downloadが主目的だが、
@@ -92,7 +92,7 @@ jobs:
 #env:へ以下を追加
 #  SERVER_SSH_KEY: '' # SSH秘密キー（公開キーはAzure側に設定、キーはPEM形式で生成する必要あり）
 #  REMOTE_HOST: ''    # ドメイン名
-#  REMOTE_USER: ''    # ユーザー名
+#  REMOTE_USER: 'k-aoki0699'    # ユーザー名
 #  REMOTE_TARGET: ''  # ターゲットディレクトリ
 #
 #    - name: Deploy to Server
