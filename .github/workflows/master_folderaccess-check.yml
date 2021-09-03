@@ -47,3 +47,14 @@ jobs:
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_22823d8812bd491b9ca52d833ec87d30 }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+#    - name: Deploy to Server
+#      uses: easingthemes/ssh-deploy@main
+#      env:
+#        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+#        ARGS: "-rltgoDzvO --delete"
+#        SOURCE: "dist/"
+#        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+#        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+#        TARGET: ${{ secrets.REMOTE_TARGET }}
+#        EXCLUDE: "/dist/, /node_modules/"
