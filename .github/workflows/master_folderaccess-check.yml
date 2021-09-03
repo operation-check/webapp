@@ -50,7 +50,10 @@ jobs:
       uses: actions/upload-artifact@v2	
       with:	
         name: .net-app	
-        path: ${{env.DOTNET_ROOT}}/myapp	
+        path: ${{env.DOTNET_ROOT}}/myapp
+
+    - name: echo DOTNET_ROOT
+      run: echo ${{ env.DOTNET_ROOT }}
 
 #---------------------------------------------------------------------------------
 # buildとdeployを分ける場合はコメントアウトを戻す。
@@ -72,6 +75,9 @@ jobs:
       uses: actions/download-artifact@v2	
       with:	
         name: .net-app	
+
+    - name: echo DOTNET_ROOT
+      run: echo ${{ env.DOTNET_ROOT }}
 
 # 配信（デプロイ）
 # 生成物を目的へdeployするためのもの。
