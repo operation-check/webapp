@@ -67,11 +67,12 @@ jobs:
       with:
         app-name: 'operationcheck-webapp'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
+#        publish-profile: ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
+        publish-profile: ${{ secrets.PUBLISH_PROFILE }}
         package: .
 
 #
-    - name: echo env.AZURE_HTTP_USER_AGENT
-      run: echo ${{ env.AZURE_HTTP_USER_AGENT }}
-    - name: echo secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935
-      run: echo ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
+    - name: echo secrets.PUBLISH_PROFILE
+      run: echo ${{ secrets.PUBLISH_PROFILE }}
+#    - name: echo secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935
+#      run: echo ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
