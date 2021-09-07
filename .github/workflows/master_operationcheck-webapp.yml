@@ -71,5 +71,7 @@ jobs:
         package: .
 
 #
+    - name: echo env.AZURE_HTTP_USER_AGENT
+      run: echo ${{ env.AZURE_HTTP_USER_AGENT }}
     - name: echo secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935
       run: echo ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
