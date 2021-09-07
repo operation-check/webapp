@@ -51,7 +51,7 @@ jobs:
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'appservice-test02'
+        app-name: 'test-t01'
         slot-name: 'production'
-        publish-profile: ${{ secrets.PUBLISH_PROFILE2 }}
+        publish-profile: ${{ secrets.TEST_T01 }}
         package: .
