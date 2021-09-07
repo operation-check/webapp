@@ -28,7 +28,9 @@ jobs:
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-# 
+#
+    - name: echo DOTNET_ROOT
+      run: echo ${{ DOTNET_ROOT }}
     - name: display stracture of upload files
       run: ls -R
 
@@ -46,6 +48,10 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+#
+    - name: echo steps.deploy-to-webapp.outputs.webapp-url
+      run: echo ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
     - name: Download artifact from build job
       uses: actions/download-artifact@v2
       with:
@@ -63,3 +69,7 @@ jobs:
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
         package: .
+
+#
+    - name: echo secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935
+      run: echo ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
