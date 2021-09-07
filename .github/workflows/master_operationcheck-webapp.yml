@@ -52,14 +52,14 @@ jobs:
     - name: echo steps.deploy-to-webapp.outputs.webapp-url
       run: echo ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v2
-      with:
-        name: .net-app
+#    - name: Download artifact from build job
+#      uses: actions/download-artifact@v2
+#      with:
+#        name: .net-app
 
 # 
-    - name: display stracture of download files
-      run: ls -R
+#    - name: display stracture of download files
+#      run: ls -R
 
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
