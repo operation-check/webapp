@@ -57,7 +57,7 @@ jobs:
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'appdeploy-test01'
+        app-name: 'operationcheck-webapp'
         slot-name: 'production'
 #        publish-profile: ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
         publish-profile: ${{ secrets.PUBLISH_PROFILE }}
