@@ -29,8 +29,8 @@ jobs:
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
 #
-    - name: echo DOTNET_ROOT
-      run: echo ${{ DOTNET_ROOT }}
+    - name: echo env.DOTNET_ROOT
+      run: echo ${{ env.DOTNET_ROOT }}
     - name: display stracture of upload files
       run: ls -R
 
