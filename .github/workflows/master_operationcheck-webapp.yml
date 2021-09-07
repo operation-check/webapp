@@ -29,7 +29,7 @@ jobs:
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
 # 
-    - name: display stracture of download files
+    - name: display stracture of upload files
       run: ls -R
 
     - name: Upload artifact for deployment job
