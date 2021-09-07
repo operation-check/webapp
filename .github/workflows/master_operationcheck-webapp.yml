@@ -34,11 +34,11 @@ jobs:
     - name: display stracture of upload files
       run: ls -R
 
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
-      with:
-        name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
+#    - name: Upload artifact for deployment job
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: .net-app
+#        path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: ubuntu-latest
@@ -70,9 +70,3 @@ jobs:
 #        publish-profile: ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
         publish-profile: ${{ secrets.PUBLISH_PROFILE }}
         package: .
-
-#
-    - name: echo secrets.PUBLISH_PROFILE
-      run: echo ${{ secrets.PUBLISH_PROFILE }}
-#    - name: echo secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935
-#      run: echo ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
