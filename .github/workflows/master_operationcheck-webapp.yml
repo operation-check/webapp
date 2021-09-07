@@ -48,18 +48,10 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-#
-    - name: echo steps.deploy-to-webapp.outputs.webapp-url
-      run: echo ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
     - name: Download artifact from build job
       uses: actions/download-artifact@v2
       with:
         name: .net-app
-
-# 
-    - name: display stracture of download files
-      run: ls -R
 
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
@@ -67,6 +59,6 @@ jobs:
       with:
         app-name: 'operationcheck-webapp'
         slot-name: 'production'
-#        publish-profile: ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
-        publish-profile: ${{ secrets.PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
+#        publish-profile: ${{ secrets.PUBLISH_PROFILE }}
         package: .
