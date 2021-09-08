@@ -1,2 +1,2 @@
 # webapp
-WebApp deploy確認用repository
+public設定のwebappをAzureへDeployできるかの確認用
