@@ -71,6 +71,11 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+
+    # Clone source code
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
     - uses: EndBug/add-and-commit@v7
       with:
         message: Show GitHub Actions logo
@@ -78,4 +83,3 @@ jobs:
         committer_email: actions@github.com
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
