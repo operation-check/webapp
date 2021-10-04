@@ -62,10 +62,3 @@ jobs:
 #        publish-profile: ${{ secrets.AzureAppService_PublishProfile_39012fe4396241e683ce200ac1c7c935 }}
         publish-profile: ${{ secrets.PUBLISH_PROFILE }}
         package: .
-
-  record:
-    runs-on: ubuntu-latest
-    needs: deploy
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
